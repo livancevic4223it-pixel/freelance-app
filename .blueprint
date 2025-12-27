@@ -1,2 +1,29 @@
+created:
+    - app/Http/Controllers/CategoryController.php
+    - app/Http/Controllers/JobController.php
+    - database/factories/CategoryFactory.php
+    - database/factories/JobFactory.php
+    - database/migrations/2025_12_27_161312_create_categories_table.php
+    - database/migrations/2025_12_27_161313_create_jobs_table.php
+    - app/Models/Category.php
+    - app/Models/Job.php
+    - tests/Feature/Http/Controllers/CategoryControllerTest.php
+    - tests/Feature/Http/Controllers/JobControllerTest.php
+    - app/Http/Requests/CategoryStoreRequest.php
+    - app/Http/Requests/CategoryUpdateRequest.php
+    - app/Http/Requests/JobStoreRequest.php
+    - app/Http/Requests/JobUpdateRequest.php
+    - resources/views/category/index.blade.php
+    - resources/views/category/create.blade.php
+    - resources/views/category/show.blade.php
+    - resources/views/category/edit.blade.php
+    - resources/views/job/index.blade.php
+    - resources/views/job/create.blade.php
+    - resources/views/job/show.blade.php
+    - resources/views/job/edit.blade.php
+updated:
+    - routes/web.php
 models:
     User: { name: string, email: string, email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }
+    Category: { name: 'string:100' }
+    Job: { title: 'string:150', description: text, budget: integer, user_id: 'id foreign:User', category_id: 'id foreign:Category' }
