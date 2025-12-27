@@ -1,5 +1,17 @@
 models:
-  # ...
+  Category:
+    name: string:100
+
+  Job:
+    title: string:150
+    description: text
+    budget: integer
+    user_id: id foreign:User
+    category_id: id foreign:Category
 
 controllers:
-  # ...
+  Category:
+    resource
+
+  Job:
+    resource
