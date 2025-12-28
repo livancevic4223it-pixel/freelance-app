@@ -18,13 +18,12 @@ Route::middleware('auth')->group(function () {
 
 });
 
-use App\Http\Controllers\JobController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\JobController;
 
 Route::middleware('auth')->group(function () {
     Route::resource('jobs', JobController::class);
     Route::resource('categories', CategoryController::class);
 });
-
 
 require __DIR__.'/auth.php';

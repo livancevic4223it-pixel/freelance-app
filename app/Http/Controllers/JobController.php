@@ -6,8 +6,8 @@ use App\Http\Requests\JobStoreRequest;
 use App\Http\Requests\JobUpdateRequest;
 use App\Models\Category;
 use App\Models\Job;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class JobController extends Controller
