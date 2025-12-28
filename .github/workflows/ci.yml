@@ -19,12 +19,25 @@ jobs:
           extensions: mbstring, pdo_sqlite
           coverage: none
 
-      - name: Copy .env
+      # ✅ Node za Vite (da Blade ne puca na @vite)
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install NPM deps
+        run: npm ci || npm install
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Copy .env and create sqlite
         run: |
           cp .env.example .env
           php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
 
-      - name: Install dependencies
+      - name: Install Composer deps
         run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Generate key
