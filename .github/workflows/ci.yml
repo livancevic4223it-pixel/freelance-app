@@ -9,26 +9,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: "8.2"
+          extensions: mbstring, pdo_sqlite
+          coverage: none
 
-      - name: Install dependencies
-        run: composer install --no-progress --prefer-dist
-
-      - name: Prepare environment
+      - name: Copy .env
         run: |
           cp .env.example .env
-          php artisan key:generate
+          php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Generate key
+        run: php artisan key:generate
 
       - name: Run migrations
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
         run: php artisan migrate --force
 
       - name: Run tests
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
         run: php artisan test
 
       - name: Run Pint
-        run: vendor/bin/pint
+        run: ./vendor/bin/pint --test
