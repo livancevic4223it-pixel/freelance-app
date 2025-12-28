@@ -9,7 +9,8 @@ class Job extends Model
 {
     use HasFactory;
 
-    protected $table = 'job_posts'; // 👈 NAJBITNIJE
+    // 👇 OVO MORA jer ti tabela NIJE jobs nego job_posts
+    protected $table = 'job_posts';
 
     protected $fillable = [
         'title',
@@ -18,4 +19,9 @@ class Job extends Model
         'category_id',
         'user_id',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

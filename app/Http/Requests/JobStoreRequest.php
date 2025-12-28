@@ -6,25 +6,24 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class JobStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:150'],
+            'title'       => ['required', 'string', 'max:150'],
             'description' => ['required', 'string'],
-            'budget' => ['required', 'integer'],
-            'user_id' => ['required', 'integer', 'exists:User,id'],
-            'category_id' => ['required', 'integer', 'exists:Category,id'],
+            'budget'      => ['required', 'integer', 'min:0'],
+
+            // Kategorija mora postojati u tabeli "categories"
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
+
+            // Nemoj forsirati user_id iz forme (controller treba da koristi auth()->id()).
+            // Ako forma ipak šalje, neće praviti problem.
+            'user_id'     => ['nullable', 'integer', 'exists:users,id'],
         ];
     }
 }

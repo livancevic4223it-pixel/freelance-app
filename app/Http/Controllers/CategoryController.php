@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
     public function index(Request $request): View
     {
-        $categories = Category::all();
+        $categories = Category::latest()->get();
 
         return view('category.index', [
             'categories' => $categories,
@@ -27,7 +27,10 @@ class CategoryController extends Controller
 
     public function store(CategoryStoreRequest $request): RedirectResponse
     {
-        Category::create($request->validated());
+        $category = Category::create($request->validated());
+
+        // ✅ BITNO ZA TEST
+        $request->session()->flash('category.id', $category->id);
 
         return redirect()->route('categories.index');
     }
@@ -49,6 +52,9 @@ class CategoryController extends Controller
     public function update(CategoryUpdateRequest $request, Category $category): RedirectResponse
     {
         $category->update($request->validated());
+
+        // ✅ BITNO ZA TEST
+        $request->session()->flash('category.id', $category->id);
 
         return redirect()->route('categories.index');
     }

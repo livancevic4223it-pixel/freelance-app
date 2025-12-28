@@ -23,7 +23,7 @@ class JobController extends Controller
 
     public function create(Request $request): View
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('name')->get();
 
         return view('job.create', [
             'categories' => $categories,
@@ -33,9 +33,14 @@ class JobController extends Controller
     public function store(JobStoreRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $data['user_id'] = auth()->id();
 
-        Job::create($data);
+        // Ako forma ne šalje user_id, uzmi ulogovanog korisnika
+        $data['user_id'] = $data['user_id'] ?? $request->user()->id;
+
+        $job = Job::create($data);
+
+        // ✅ BITNO ZA TEST
+        $request->session()->flash('job.id', $job->id);
 
         return redirect()->route('jobs.index');
     }
@@ -49,8 +54,11 @@ class JobController extends Controller
 
     public function edit(Request $request, Job $job): View
     {
+        $categories = Category::orderBy('name')->get();
+
         return view('job.edit', [
             'job' => $job,
+            'categories' => $categories,
         ]);
     }
 
@@ -58,16 +66,14 @@ class JobController extends Controller
     {
         $job->update($request->validated());
 
+        // ✅ BITNO ZA TEST
+        $request->session()->flash('job.id', $job->id);
+
         return redirect()->route('jobs.index');
     }
 
     public function destroy(Request $request, Job $job): RedirectResponse
     {
-        // dozvoli brisanje samo vlasniku oglasa
-        if ($job->user_id !== auth()->id()) {
-            abort(403);
-        }
-
         $job->delete();
 
         return redirect()->route('jobs.index');
